@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Alfiatu Nur Octavia 💖</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff4757;
+            --primary-hover: #ff6b81;
+            --accent: #ffa502;
+            --matrix-pink: #ff007f;
+            --glass-card: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --text-dark: #1e272e;
+            --text-light: #f1f2f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            overflow-x: hidden;
+            padding: 20px;
+            perspective: 1200px;
+        }
+
+        /* 1. OPENING MATRIX PINK */
+        #opening-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .opening-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .matrix-text {
+            font-family: 'VT323', monospace;
+            font-size: 3.5rem;
+            color: var(--matrix-pink);
+            text-shadow: 0 0 20px var(--matrix-pink), 0 0 40px #ff758c;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .matrix-text.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .skip-btn {
+            position: absolute;
+            bottom: 40px;
+            z-index: 20;
+            background: rgba(255, 0, 127, 0.2);
+            border: 1px solid var(--matrix-pink);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .skip-btn:hover { background: var(--matrix-pink); box-shadow: 0 0 15px var(--matrix-pink); }
+
+        /* 2. WEBSITE UTAMA */
+        #main-website {
+            opacity: 1;
+            visibility: visible;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Tirai Transisi 3D */
+        #transition-curtain {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff4757, #ff758c, #ff8e53);
+            z-index: 9999;
+            pointer-events: none;
+            box-shadow: 0 0 50px rgba(255, 71, 87, 0.8);
+        }
+
+        .curtain-animate {
+            animation: swipeCurtain 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        @keyframes swipeCurtain {
+            0% { left: -100%; border-radius: 0 100% 100% 0; }
+            50% { left: 0%; border-radius: 0; }
+            100% { left: 100%; border-radius: 100% 0 0 100%; }
+        }
+
+        /* Canvas Background Partikel Hati */
+        #heart-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Kontrol Musik */
+        .top-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .bgm-control {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .bgm-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .page {
+            display: none;
+            background: var(--glass-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 35px 28px;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .page.active { display: block; }
+
+        /* Animasi Masuk Tiap Halaman */
+        #page1.active { animation: anim3DFlip 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes anim3DFlip { 0% { opacity: 0; transform: rotateY(-90deg); } 100% { opacity: 1; transform: rotateY(0deg); } }
+
+        #page2.active { animation: animElastic 0.85s cubic-bezier(0.68, -0.6, 0.32, 1.6) forwards; }
+        @keyframes animElastic { 0% { opacity: 0; transform: scale(0.3); } 100% { opacity: 1; transform: scale(1); } }
+
+        #page3.active { animation: animDiagonal 0.8s ease forwards; }
+        @keyframes animDiagonal { 0% { opacity: 0; transform: translate(100px, -100px); } 100% { opacity: 1; transform: translate(0, 0); } }
+
+        #page4.active { animation: animBlur 0.75s ease forwards; }
+        @keyframes animBlur { 0% { opacity: 0; filter: blur(20px); } 100% { opacity: 1; filter: blur(0); } }
+
+        #page5.active { animation: animSpiral 0.85s ease forwards; }
+        @keyframes animSpiral { 0% { opacity: 0; transform: rotate(-180deg) scale(0.2); } 100% { opacity: 1; transform: rotate(0) scale(1); } }
+
+        #page6.active { animation: animSpring 0.8s ease forwards; }
+        @keyframes animSpring { 0% { opacity: 0; transform: translateY(150px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        #page7.active { animation: animEnvelope 0.8s ease forwards; }
+        @keyframes animEnvelope { 0% { opacity: 0; transform: rotateX(-80deg); } 100% { opacity: 1; transform: rotateX(0); } }
+
+        #page8.active { animation: animBlast 0.75s ease forwards; }
+        @keyframes animBlast { 0% { opacity: 0; transform: scale(0.2); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* Styling Komponen */
+        .landing-title { font-family: 'Dancing Script', cursive; font-size: 3.2rem; color: var(--primary); line-height: 1.1; margin-bottom: 5px; }
+        .landing-subtitle { font-size: 0.9rem; color: #57606f; margin-bottom: 20px; }
+
+        .profile-container { position: relative; width: 170px; height: 170px; margin: 0 auto 15px; }
+        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 10px 25px rgba(255, 71, 87, 0.3); }
+        .profile-badge { position: absolute; bottom: 5px; right: 5px; background: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+
+        .fact-box { background: #ffffff; padding: 14px 18px; border-radius: 16px; margin-bottom: 12px; text-align: left; border-left: 4px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .fact-box h4 { color: var(--primary); font-size: 0.9rem; margin-bottom: 3px; }
+        .fact-box p { font-size: 0.82rem; color: #57606f; }
+
+        .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+        .photo-card { border-radius: 16px; overflow: hidden; background: #f1f2f6; height: 150px; border: 3px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* PERBAIKAN HALAMAN 4 (SOUNDTRACK) AGAR TIDAK BERANTAKAN */
+        .special-player-box { 
+            background: #ffffff; 
+            border: 2px solid #ffeaa7; 
+            border-radius: 16px; 
+            padding: 15px; 
+            margin: 12px 0; 
+            text-align: left; 
+            box-shadow: 0 6px 15px rgba(255,165,2,0.12); 
+        }
+        .track-info { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .track-cover { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+        .track-title { font-weight: 700; font-size: 0.9rem; color: #2f3542; }
+
+        .btn-play-special { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 0.8rem; 
+            cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(255,71,87,0.3); 
+        }
+
+        /* WADAH VIDEO PORTRAIT 9:16 YANG DIOPTIMALKAN */
+        .video-wrapper { 
+            width: 100%; 
+            max-width: 260px; 
+            height: 380px; 
+            border-radius: 18px; 
+            overflow: hidden; 
+            background: #000; 
+            margin: 10px auto; 
+            border: 3px solid #fff; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
+        }
+
+        .video-wrapper video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; /* Diubah ke contain agar video tidak terpotong dan tombol play mudah diakses */
+            display: block; 
+            background: #000;
+        }
+
+        .timeline-box { position: relative; padding-left: 20px; margin: 15px 0; text-align: left; border-left: 2px dashed var(--primary); }
+        .timeline-item { position: relative; margin-bottom: 15px; }
+        .timeline-item::before { content: '💖'; position: absolute; left: -29px; top: 0; font-size: 0.8rem; }
+
+        .envelope-wrapper { background: #fff; border: 2px dashed var(--primary); padding: 22px 18px; border-radius: 20px; margin: 15px 0; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .letter-content { display: none; font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.85rem; line-height: 1.6; color: #2f3542; text-align: left; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-action { flex: 1; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none; padding: 11px 16px; border-radius: 25px; font-weight: 700; font-size: 0.8rem; cursor: pointer; box-shadow: 0 4px 15px rgba(255,71,87,0.3); }
+        .btn-action.btn-secondary { background: #e4e7eb; color: #57606f; box-shadow: none; }
+
+        /* KOLASE FOTO BENTUK HATI HALAMAN 8 */
+        .heart-layout-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 15px auto;
+        }
+
+        .heart-photo-item {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            border: 2px solid #fff;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+            transform: scale(0);
+            animation: popInHeart 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popInHeart {
+            0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. OPENING MATRIX PINK -->
+    <div id="opening-section">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="opening-content">
+            <div id="matrix-text-display" class="matrix-text">3</div>
+        </div>
+        <button class="skip-btn" onclick="startMainWebsite()">Lewati Opening ➡️</button>
+    </div>
+
+    <!-- 2. MAIN WEBSITE -->
+    <div id="main-website">
+        <div id="transition-curtain"></div>
+        <canvas id="heart-canvas"></canvas>
+
+        <div class="top-nav">
+            <div class="bgm-control">
+                <button class="bgm-btn" onclick="toggleBGM()">🎵</button>
+                <span id="bgm-label" style="font-weight:600; color:#fff;">Putar BGM</span>
+                <audio id="audio-bgm" loop src="spesial for you.mp3"></audio>
+            </div>
+        </div>
+
+        <audio id="audio-special" src="Lagu-Khusus-Kamu.mp3"></audio>
+
+        <main>
+            <!-- HALAMAN 1 -->
+            <div id="page1" class="page active">
+                <div class="profile-container">
+                    <img src="foto-profil.jpg" class="profile-img" alt="Foto Profil">
+                    <div class="profile-badge">Special Day 👑</div>
+                </div>
+                <h1 class="landing-title">Selamat Ulang Tahun</h1>
+                <p style="font-weight: 700; color: var(--primary); font-size: 1.05rem; margin-bottom: 6px;">Alfiatu Nur Octavia</p>
+                <p class="landing-subtitle">Website spesial ini dibuat khusus untuk merayakan hari istimewamu. ✨</p>
+                <button class="btn-action" onclick="goToPageWithCurtain(2)">Mulai Perjalanan ➡️</button>
+            </div>
+
+            <!-- HALAMAN 2 -->
+            <div id="page2" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Tentang Dirimu ✨</h2>
+                <p style="font-size: 0.8rem; color: #747d8c; margin-bottom: 12px;">Hal-hal indah yang membuatmu begitu berharga:</p>
+                
+                <div class="fact-box">
+                    <h4>1. Senyuman Terindah 🌺</h4>
+                    <p>Senyummu selalu membawa energi positif dan kebahagiaan di setiap harinya.</p>
+                </div>
+                <div class="fact-box">
+                    <h4>2. Ketulusan Hati 💖</h4>
+                    <p>Sifat baikmu membuat siapa saja merasa nyaman berada di dekatmu.</p>
+                </div>
+                <div class="fact-box">
+                    <h4>3. Sosok Inspiratif ⭐</h4>
+                    <p>Semangat dan kerja kerasmu selalu luar biasa di setiap langkah.</p>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(1)">⬅️ Kembali</button>
+                    <button class="btn-action" onclick="goToPageWithCurtain(3)">Galeri Foto 📸</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 3 -->
+            <div id="page3" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Galeri Senyuman 📸</h2>
+                <p style="font-size: 0.8rem; color: #747d8c;">Kumpulan potret cantik sang bintang hari ini.</p>
+                
+                <div class="photo-grid">
+                    <div class="photo-card"><img src="foto1.jpg" alt="Foto 1"></div>
+                    <div class="photo-card"><img src="foto2.jpg" alt="Foto 2"></div>
+                    <div class="photo-card"><img src="foto3.jpg" alt="Foto 3"></div>
+                    <div class="photo-card"><img src="foto4.jpg" alt="Foto 4"></div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(2)">⬅️ Kembali</button>
+                    <button class="btn-action" onclick="goToPageWithCurtain(4)">Lagu Spesial 🎵</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 4 -->
+            <div id="page4" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 4px; font-size: 1.5rem;">Soundtrack Untukmu 🎧</h2>
+                <p style="font-size: 0.75rem; color: #747d8c; margin-bottom: 10px; line-height: 1.4;">lagu nya agak sedikit beda , tapi insya Allah ketika kamu sedang cape bisa di dengerin ya lagu nya, siapa tau bisa jadi semangat lagii, jadi kalau lagi cape atau mau neyarah dengerin lagu ini ajaa yaaa, sehat sehat yaa, dengerin lagu itu juga salah satu mood booster lo, semoga bermanfaat yaaa.</p>
+                
+                <div class="special-player-box">
+                    <div class="track-info">
+                        <img src="foto-profil.jpg" class="track-cover" alt="Cover">
+                        <div>
+                            <div class="track-title">Lagu Khusus Kamu 💖</div>
+                            <div style="font-size: 0.7rem; color: #747d8c;">Alfiatu Nur Octavia's Special</div>
+                        </div>
+                    </div>
+                    <button class="btn-play-special" id="btn-special-play" onclick="toggleSpecialMusic()">▶️ Putar Lagu Spesial</button>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(3)">⬅️ Kembali</button>
+                    <button class="btn-action" onclick="goToPageWithCurtain(5)">Video Tentang Mu 🎥</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 5 -->
+            <div id="page5" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 4px;">ALWAYS FOR YOU🎬</h2>
+                <p style="font-size: 0.78rem; color: #747d8c;">Recab memori indah penuh kebahagiaan.</p>
+                
+                <div class="video-wrapper">
+                    <!-- Menggunakan playsinline dan preload auto agar langsung siap diputar di semua perangkat -->
+                    <video id="special-video" controls playsinline preload="auto" poster="foto-profil.jpg" onplay="stopAllAudios()">
+                        <source src="video.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(4)">⬅️ Kembali</button>
+                    <button class="btn-action" onclick="goToPageWithCurtain(6)">Jejak Waktu 🗓️</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 6 -->
+            <div id="page6" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Pencapaian & Waktu 🗓️</h2>
+                <p style="font-size: 0.8rem; color: #747d8c; margin-bottom: 15px;">Perjalanan luar biasa hingga hari ini.</p>
+                
+                <div class="timeline-box">
+                    <div class="timeline-item">
+                        <div style="font-size:0.75rem; font-weight:700; color:var(--primary);">Hari Kelahiranmu</div>
+                        <div style="font-size:0.82rem; color:#57606f;">Hari di mana dunia tersenyum karena kehadiranmu.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div style="font-size:0.75rem; font-weight:700; color:var(--primary);">Tumbuh Hebat</div>
+                        <div style="font-size:0.82rem; color:#57606f;">Menjadi pribadi yang kuat, cerdas, dan mempesona.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div style="font-size:0.75rem; font-weight:700; color:var(--primary);">Hari Ini (Special Day)</div>
+                        <div style="font-size:0.82rem; color:#57606f;">Merayakan bertambahnya usia dengan penuh kebahagiaan!</div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(5)">⬅️ Kembali</button>
+                    <button class="btn-action" onclick="goToPageWithCurtain(7)">Surat Cinta 💌</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 7 -->
+            <div id="page7" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Surat Untukmu 💌</h2>
+                <p style="font-size: 0.8rem; color: #747d8c;">Sentuh amplop di bawah ini untuk membacanya:</p>
+                
+                <div class="envelope-wrapper" onclick="openEnvelope()">
+                    <div class="envelope-icon" id="env-icon" style="font-size: 40px;">✉️</div>
+                    <div id="env-hint" style="font-weight:700; color:var(--primary); font-size:0.82rem;">Sentuh untuk Buka Surat</div>
+                    <div class="letter-content" id="letter-text">
+                    "Selamat ulang tahun Alfiatu Nur Octavia🥳🤍🤍, eumm gak terasa ya sekarang kamu sudah menjadi mba-mba kuliah yang dulu sering kamu sampaikan kepada ku , Allhandulillah step by step mimpi mu mulai terwujud, setelah mimpi mu terwujud kamu bakal menemui rintangan yang lebih menantang di depan sana, semangat ya🤍🤍, satu hal yang perlu kamu tau, kamu sekarang sedang berdiri di atas doa mu sendiri jadi semakin tinggi harapan atau doa kita semakin tinggi pula rintangan yang sudah menunggu kita di depan sana, setiap orang punya strugle masing-masing , tinggal kita ne ae mau menghadapi nya dengan bagaimana, setiap orang punya cara tersendiri , dan ketika kamu merasa kurang, ingatlah kamu adalah wanita hebat dan kuat yang pernah aku temui, aku sempet termotivasi dengan mu, bahkan aku lebih semangat belajar karena kamu, jadi stop menjudge dirimu sendiri, sesekali apresiasi dirimu , kamu hebat, kamu keren, kamu mandiri, kamu baik, kamu cantik, semangat yaa ibu guru, aku yakin kamu pasti bisa, tambah umur pasti akan tambah pengalaman juga, inget wish list mu masih panjang , katane mau keliling dunia, pengen ke luar negri, jadi semangat yaa Semoga di usiamu yang baru ini, segala impian, harapan, dan doa baikmu dikabulkan oleh Allah. Tetaplah menjadi pribadi yang membawa kebahagiaan bagi orang-orang di sekitarmu. Have a wonderful birthday! ❤️"
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(6)">⬅️ Kembali</button>
+                    <button class="btn-action" onclick="goToPageWithCurtain(8)">Kejutan Akhir 💖</button>
+                </div>
+            </div>
+
+            <!-- HALAMAN 8 -->
+            <div id="page8" class="page">
+                <h2 style="color: var(--primary); margin-bottom: 2px;">Special Heart Gallery 💕</h2>
+                <p style="font-size: 0.78rem; color: #747d8c;">Kumpulan potretmu yang membentuk formasi cinta!</p>
+                
+                <div class="heart-layout-container" id="heart-photos-container"></div>
+
+                <div class="btn-group" style="margin-top:10px;">
+                    <button class="btn-action btn-secondary" onclick="goToPageWithCurtain(1)">🔁 Ulangi Perjalanan</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPT JAVASCRIPT -->
+    <script>
+        /* 1. ANIMASI OPENING MATRIX */
+        const mCanvas = document.getElementById('matrix-canvas');
+        const mCtx = mCanvas.getContext('2d');
+        function resizeMCanvas() { mCanvas.width = window.innerWidth; mCanvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeMCanvas);
+        resizeMCanvas();
+
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ♥💖';
+        const fontSize = 16;
+        const columns = Math.floor(mCanvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            mCtx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+            mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+            mCtx.fillStyle = '#ff007f';
+            mCtx.font = fontSize + 'px VT323';
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > mCanvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        const matrixInterval = setInterval(drawMatrix, 33);
+
+        const sequence = ["3", "2", "1", "HAPPY", "BIRTHDAY", "ALFIATU", "NUR", "OCTAVIA", "💖"];
+        const textDisplay = document.getElementById('matrix-text-display');
+        let seqIndex = 0;
+
+        function runOpeningSequence() {
+            if (seqIndex < sequence.length) {
+                textDisplay.innerText = sequence[seqIndex];
+                textDisplay.classList.add('show');
+                setTimeout(() => {
+                    textDisplay.classList.remove('show');
+                    seqIndex++;
+                    setTimeout(runOpeningSequence, 280);
+                }, 900);
+            } else {
+                setTimeout(startMainWebsite, 500);
+            }
+        }
+        setTimeout(runOpeningSequence, 800);
+
+        function startMainWebsite() {
+            clearInterval(matrixInterval);
+            const opening = document.getElementById('opening-section');
+            if (opening) {
+                opening.style.opacity = '0';
+                setTimeout(() => { opening.style.display = 'none'; }, 800);
+            }
+            toggleBGM();
+        }
+
+        /* 2. BACKGROUND PARTIKEL BENTUK LOVE */
+        const canvas = document.getElementById('heart-canvas');
+        const ctx = canvas.getContext('2d');
+        let hearts = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Heart {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.size = Math.random() * 14 + 10;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.color = `hsl(${Math.random() * 20 + 340}, 100%, 65%)`;
+            }
+            update() { 
+                this.y -= this.speedY; 
+                this.x += this.speedX;
+                if (this.y < -20) this.reset(); 
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(this.x, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + this.size, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight, this.x + this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+                
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        for (let i = 0; i < 35; i++) hearts.push(new Heart());
+        function animateHearts() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(h => { h.update(); h.draw(); });
+            requestAnimationFrame(animateHearts);
+        }
+        animateHearts();
+
+        /* 3. NAVIGASI PERPINDAHAN HALAMAN DENGAN TIRAI 3D */
+        function goToPageWithCurtain(pageNum) {
+            const curtain = document.getElementById('transition-curtain');
+            curtain.classList.add('curtain-animate');
+            setTimeout(() => {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page' + pageNum).classList.add('active');
+                if (pageNum === 8) renderHeartPhotos();
+            }, 400);
+            setTimeout(() => curtain.classList.remove('curtain-animate'), 800);
+        }
+
+        /* 4. RENDER FOTO POLA LOVE BESAR DI HALAMAN 8 */
+        const myPhotosList = [
+            'foto1.jpg', 'foto2.jpg', 'foto3.jpg', 'foto4.jpg', 
+            'foto5.jpg', 'foto-profil.jpg', 'foto1.jpg', 'foto2.jpg',
+            'foto3.jpg', 'foto4.jpg', 'foto5.jpg', 'foto-profil.jpg'
+        ];
+
+        function renderHeartPhotos() {
+            const container = document.getElementById('heart-photos-container');
+            container.innerHTML = '';
+
+            const total = 15;
+            for (let i = 0; i < total; i++) {
+                const t = (i / total) * Math.PI * 2;
+                
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+
+                const img = document.createElement('img');
+                img.src = myPhotosList[i % myPhotosList.length];
+                img.className = 'heart-photo-item';
+
+                const posX = 130 + (x * 8.5);
+                const posY = 125 + (y * 8.5);
+
+                img.style.left = `${posX}px`;
+                img.style.top = `${posY}px`;
+                img.style.animationDelay = `${i * 0.08}s`;
+
+                container.appendChild(img);
+            }
+            confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+        }
+
+        /* 5. KONTROL DUA MUSIK */
+        function toggleBGM() {
+            const audioBGM = document.getElementById('audio-bgm');
+            const audioSpecial = document.getElementById('audio-special');
+            const bgmLabel = document.getElementById('bgm-label');
+
+            if (audioBGM.paused) {
+                if (audioSpecial && !audioSpecial.paused) {
+                    audioSpecial.pause();
+                    const btnSpecial = document.getElementById('btn-special-play');
+                    if (btnSpecial) btnSpecial.innerHTML = '▶️ Putar Lagu Spesial';
+                }
+                audioBGM.play().then(() => {
+                    if (bgmLabel) bgmLabel.innerText = "BGM Playing 🎶";
+                }).catch((err) => console.log("BGM Play Error:", err));
+            } else {
+                audioBGM.pause();
+                if (bgmLabel) bgmLabel.innerText = "Putar BGM";
+            }
+        }
+
+        function toggleSpecialMusic() {
+            const audioSpecial = document.getElementById('audio-special');
+            const audioBGM = document.getElementById('audio-bgm');
+            const btnSpecial = document.getElementById('btn-special-play');
+            const bgmLabel = document.getElementById('bgm-label');
+
+            if (audioSpecial.paused) {
+                if (audioBGM && !audioBGM.paused) {
+                    audioBGM.pause();
+                    if (bgmLabel) bgmLabel.innerText = "Putar BGM";
+                }
+                audioSpecial.play().then(() => {
+                    if (btnSpecial) btnSpecial.innerHTML = '⏸️ Hentikan Lagu Spesial';
+                }).catch((err) => console.log("Special Music Play Error:", err));
+            } else {
+                audioSpecial.pause();
+                if (btnSpecial) btnSpecial.innerHTML = '▶️ Putar Lagu Spesial';
+            }
+        }
+
+        function stopAllAudios() {
+            const audioBGM = document.getElementById('audio-bgm');
+            const audioSpecial = document.getElementById('audio-special');
+            if (audioBGM) audioBGM.pause();
+            if (audioSpecial) audioSpecial.pause();
+        }
+
+        /* 6. BUKA SURAT DI HALAMAN 7 */
+        function openEnvelope() {
+            document.getElementById('env-icon').innerText = '📩';
+            document.getElementById('env-hint').style.display = 'none';
+            document.getElementById('letter-text').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
